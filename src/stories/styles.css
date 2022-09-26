@@ -1,0 +1,61 @@
+form {
+
+}
+
+label {
+  display: flex;
+  font-size: 16px;
+  align-items: center;
+  margin: 8px 0; 
+}
+
+input:not([type="checkbox"]) {
+  border: 2px solid #240425;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 16px;
+  margin-bottom: 16px;
+  min-width: 400px;
+}
+
+input[type="checkbox"] {
+  padding: 8px 16px;
+  margin-right: 8px;
+}
+
+button[type="submit"] {
+  background: #520953;
+  border: 2px solid #240425;
+  border-radius: 4px;
+  margin-top: 8px;
+  padding: 8px 16px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button[type="reset"] {
+  background: #f399f4;
+  border: 2px solid #ad12b0;
+  border-radius: 4px;
+  margin-top: 8px;
+  padding: 8px 16px;
+  color: #240425;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button[disabled] {
+  background: grey;
+  border-color: grey;
+  color:gainsboro;
+  pointer-events: none;
+  opacity: .7;
+}
+
+.uf-errors {
+  color: #f5017e;
+}
+input.uf-invalid {
+  border-color: #f5017e;
+}

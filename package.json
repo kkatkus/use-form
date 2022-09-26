@@ -1,0 +1,53 @@
+{
+  "name": "@kkatkus/use-form",
+  "version": "0.0.1",
+  "description": "Form validation custom react hook",
+  "keywords": [
+    "react",
+    "hook",
+    "form",
+    "validation"
+  ],
+  "private": false,
+  "scripts": {
+    "test": "npm run test",
+    "clean": "rimraf dist",
+    "build": "npm run clean && rollup -c",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
+  },
+  "author": "Kęstutis Katkus",
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^22.0.2",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@rollup/plugin-typescript": "^8.3.4",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.78.1",
+    "rollup-plugin-dts": "^4.2.2",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-terser": "^7.0.2"
+  },
+  "peerDependencies": {
+    "@types/react": "^18.0.17",
+    "axios": "^0.27.2",
+    "react": "^18.2.0",
+    "typescript": "^4.7.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kkatkus/use-form.git"
+  },
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "files": [
+    "dist"
+  ],
+  "types": "dist/index.d.ts",
+  "bugs": {
+    "url": "https://github.com/kkatkus/use-form/issues"
+  },
+  "homepage": "https://github.com/kkatkus/use-form#readme",
+  "dependencies": {}
+}
