@@ -1,5 +1,6 @@
 import React, { FormEvent } from 'react';
-import useForm from '../useForm/useForm';
+
+import { useForm } from '../../useForm';
 import {
   decimal,
   email,
@@ -12,8 +13,9 @@ import {
   pattern,
   required,
   requiredTrue,
-} from '../validators';
-import './styles.css';
+} from '../../validators';
+
+import './../styles.css';
 
 interface Props {
   /**
@@ -27,6 +29,7 @@ interface Form {
   max: number;
   required: string;
   requiredTrue: boolean;
+  requiredRadio: string;
   equal: string;
   email: string;
   minLength: string;
@@ -39,18 +42,19 @@ interface Form {
 /**
  * Use built-in validators
  */
-export const BuiltInValidators = ({ validateOn = 'change' }: Props) => {
-  const { ref, errors, data, valid } = useForm<Form>(
+export const BuiltIn = ({ validateOn = 'change' }: Props) => {
+  const { ref, errors, data, valid, submitted } = useForm<Form>(
     {
       min: ['', [min(5)]],
       max: ['', [max(10)]],
       required: ['', [required()]],
       requiredTrue: ['', [requiredTrue()]],
+      requiredRadio: ['', [required()]],
       equal: ['', [equal('required')]],
       email: ['', [email()]],
       minLength: ['', [minLength(2)]],
       maxLength: ['', [maxLength(8)]],
-      pattern: ['', [pattern(/^(0|[1-9][0-9]*)/)]],
+      pattern: ['', [pattern(/^(x-5)$/)]],
       numeric: ['', [numeric()]],
       decimal: ['', [decimal()]],
     },
@@ -66,24 +70,42 @@ export const BuiltInValidators = ({ validateOn = 'change' }: Props) => {
 
   return (
     <>
-      {Object.values(errors).map((err) => (
-        <p className="uf-errors" key={err}>
-          {err}
-        </p>
-      ))}
+      {submitted &&
+        Object.keys(errors).map((key) => (
+          <p className="uf-errors" key={key}>
+            {errors[key]}
+          </p>
+        ))}
       <form ref={ref} onSubmit={handleSubmit} method="post">
         <input name="min" placeholder="min field" />
         <br />
         <input name="max" placeholder="max field" />
         <br />
-        <input name="required" placeholder="required field" />
+        <select name="required">
+          <option value="">select required field</option>
+          <option value="r1">r1</option>
+          <option value="r2">r2</option>
+          <option value="r3">r3</option>
+        </select>
         <br />
-        <label>
+        <label className="checkbox">
           <input name="requiredTrue" type="checkbox" />
+          <span></span>
           required true
         </label>
-        <br />
-        <input name="equal" placeholder="equal field with required" />
+        <div className="radio">
+          <label>
+            <input name="requiredRadio" type="radio" value="one" />
+            <span></span>
+            Radio One
+          </label>
+          <label>
+            <input name="requiredRadio" type="radio" value="two" />
+            <span></span>
+            Radion Two
+          </label>
+        </div>
+        <textarea name="equal" placeholder="equal field with required"></textarea>
         <br />
         <input name="email" placeholder="email field" />
         <br />
@@ -91,19 +113,25 @@ export const BuiltInValidators = ({ validateOn = 'change' }: Props) => {
         <br />
         <input name="maxLength" placeholder="max length field" />
         <br />
-        <input name="pattern" placeholder="pattern field" />
+        <input name="pattern" placeholder="pattern field: 'x-5'" />
         <br />
         <input name="numeric" placeholder="numeric field" />
         <br />
         <input name="decimal" placeholder="decimal field" />
         <br />
-        <button disabled={!valid} type="submit">
-          submit
-        </button>
+        <button type="submit">submit</button>
       </form>
 
+      <p>
+        Submitted: <code>{submitted ? 'true' : 'false'}</code>
+      </p>
+
+      <p>
+        Form valid: <code>{valid ? 'true' : 'false'}</code>
+      </p>
+
       <p>Form data:</p>
-      <code>{JSON.stringify(data)}</code>
+      <code style={{ display: 'inline-block', maxWidth: '600px' }}>{JSON.stringify(data).replace(/,/g, ', ')}</code>
 
       <p>Errors:</p>
       <code>{JSON.stringify(errors)}</code>

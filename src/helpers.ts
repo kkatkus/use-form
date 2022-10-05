@@ -15,11 +15,7 @@ export function getFormInputs(form: HTMLFormElement | null): HTMLInputElement[] 
   return Array.from(form.querySelectorAll('input, select, textarea') || []);
 }
 
-export function getInputElements(
-  form: HTMLFormElement | null,
-  prop: string,
-  val?: UseFormValue,
-): HTMLInputElement[] | null {
+export function getInputElements(form: HTMLFormElement | null, prop: string): HTMLInputElement[] | null {
   if (!form) {
     return null;
   }
@@ -27,13 +23,10 @@ export function getInputElements(
   if (!elements.length) {
     return null;
   }
-  if (elements[0].type === 'radio') {
-    return elements.filter((e: HTMLInputElement) => e.value === val);
-  }
   return elements;
 }
 
-export function updateFormInputs(
+export function updateValuesForFormInputs(
   form: HTMLFormElement | null,
   data: Record<string, UseFormValue>,
 ): Record<string, HTMLInputElement[]> {
@@ -43,7 +36,7 @@ export function updateFormInputs(
   const newRefs: Record<string, HTMLInputElement[]> = {};
 
   Object.keys(data).forEach((prop) => {
-    const els = getInputElements(form, prop, data[prop]);
+    const els = getInputElements(form, prop);
     if (!els) {
       return;
     }

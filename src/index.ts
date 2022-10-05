@@ -1,3 +1,17 @@
 export { UseFormValue, UseFormConfig, UseFormErrors, UseFormOptions } from './types';
-export { isUndefinedOrNull, isEmpty, min, max, required, requiredTrue } from './validators';
-export { default } from './useForm';
+export {
+  isUndefinedOrNull,
+  isEmpty,
+  min,
+  max,
+  required,
+  requiredTrue,
+  equal,
+  email,
+  minLength,
+  maxLength,
+  pattern,
+  numeric,
+  decimal,
+} from './validators';
+export { useForm } from './useForm';

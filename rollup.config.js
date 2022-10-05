@@ -30,7 +30,7 @@ export default [
       resolve(),
       commonjs(),
       json(),
-      typescript({ tsconfig: './tsconfig.json', sourceMap: false }),
+      typescript({ tsconfig: './tsconfig.json', sourceMap: false, exclude: ['src'] }),
       terser(),
     ],
   },

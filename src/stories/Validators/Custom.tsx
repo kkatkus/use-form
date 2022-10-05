@@ -1,7 +1,10 @@
 import React, { FormEvent } from 'react';
-import { UseFormValue } from '../useForm/types';
-import useForm from '../useForm/useForm';
-import './styles.css';
+
+import { useForm } from '../../useForm';
+import { isEmpty, isUndefinedOrNull } from '../../validators';
+import { UseFormValue } from '../../types';
+
+import './../styles.css';
 
 interface Props {
   /**
@@ -17,11 +20,9 @@ interface Form {
 /**
  * Write custom validators
  */
-export const CustomValidator = ({ validateOn = 'change' }: Props) => {
+export const Custom = ({ validateOn = 'change' }: Props) => {
   const customValidator = (val: UseFormValue): string | null => {
-    console.log(val, 'asdasdasd');
-
-    if (val === '') {
+    if (isEmpty(val) || isUndefinedOrNull(val)) {
       return null;
     }
 
@@ -35,7 +36,7 @@ export const CustomValidator = ({ validateOn = 'change' }: Props) => {
 
     return null;
   };
-  const { ref, errors, data, valid, validate } = useForm<Form>(
+  const { ref, errors, data, valid, validate, submitted } = useForm<Form>(
     {
       customNumberField: ['', [customValidator]],
     },
@@ -63,6 +64,14 @@ export const CustomValidator = ({ validateOn = 'change' }: Props) => {
           submit
         </button>
       </form>
+
+      <p>
+        Submitted: <code>{submitted ? 'true' : 'false'}</code>
+      </p>
+
+      <p>
+        Form valid: <code>{valid ? 'true' : 'false'}</code>
+      </p>
 
       <p>Form data:</p>
       <code>{JSON.stringify(data)}</code>

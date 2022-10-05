@@ -1,21 +1,21 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
-import { BuiltInValidators as BV } from './BuiltInValidators';
+import { InitialData as SR } from './InitialData';
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
-  title: 'UseForm/BuiltInValidators',
-  component: BV,
+  title: 'UseForm/FormData/InitialFormData',
+  component: SR,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {},
-} as ComponentMeta<typeof BV>;
+} as ComponentMeta<typeof SR>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
-const Template: ComponentStory<typeof BV> = (args) => <BV {...args} />;
+const Template: ComponentStory<typeof SR> = (args) => <SR {...args} />;
 
-export const BuiltInValidators = Template.bind({});
+export const InitialFormData = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
-BuiltInValidators.args = {
+InitialFormData.args = {
   validateOn: 'change',
 };

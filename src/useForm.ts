@@ -1,9 +1,9 @@
-import { useState, LegacyRef, useRef, useEffect, useCallback } from 'react';
-import { extractData, getFormInputs, updateFormInputs, validateFn } from './helpers';
+import { useState, useRef, useEffect, useCallback, ForwardedRef } from 'react';
+import { extractData, getFormInputs, updateValuesForFormInputs, validateFn } from './helpers';
 import { UseFormConfig, UseFormErrors, UseFormOptions, UseFormValue } from './types';
 
 export interface UseForm<T> {
-  ref: LegacyRef<HTMLFormElement>;
+  ref: ForwardedRef<HTMLFormElement>;
   submitted: boolean;
   valid: boolean;
   data: T;
@@ -14,7 +14,7 @@ export interface UseForm<T> {
   submit: () => { valid: boolean; errors: UseFormErrors<T> };
 }
 
-export default function useForm<T>(config: UseFormConfig<T>, options?: UseFormOptions): UseForm<T> {
+export function useForm<T>(config: UseFormConfig<T>, options?: UseFormOptions): UseForm<T> {
   const formRef = useRef<HTMLFormElement>(null);
   const inputRefs = useRef<Record<keyof T, HTMLInputElement[]>>({} as Record<keyof T, HTMLInputElement[]>);
 
@@ -27,10 +27,8 @@ export default function useForm<T>(config: UseFormConfig<T>, options?: UseFormOp
       const { valid, errors } = validateFn<T>(config, d || data || ({} as T));
       setErrors(errors);
       formRef.current?.classList[valid ? 'remove' : 'add']('uf-invalid');
-
       Object.entries<HTMLInputElement[]>(inputRefs.current).forEach(([prop, els]) => {
         els.forEach((el) => {
-          console.log('update', errors[prop as keyof T] ? 'add' : 'remove', prop);
           el.classList[errors[prop as keyof T] ? 'add' : 'remove']('uf-invalid');
         });
       });
@@ -48,14 +46,24 @@ export default function useForm<T>(config: UseFormConfig<T>, options?: UseFormOp
         throw Error('Name is required for a Form Element');
       }
 
-      classList.add('uf-changed');
-      formRef.current?.classList.add('uf-changed');
+      const instantUpdate = options?.validateOn !== 'submit';
+
+      if (!classList.contains('uf-touched')) {
+        classList.add('uf-touched');
+      }
+
+      if (instantUpdate) {
+        classList.add('uf-changed');
+        formRef.current?.classList.add('uf-changed');
+      }
 
       let newData: T;
       setData((prevData: T | undefined) => {
         newData = { ...(prevData || ({} as T)), [name]: val };
-        const { errors: errs } = validate(newData);
-        classList[errs[name as keyof T] ? 'add' : 'remove']('uf-invalid');
+        if (instantUpdate) {
+          const { errors: errs } = validate(newData);
+          classList[errs[name as keyof T] ? 'add' : 'remove']('uf-invalid');
+        }
         return newData;
       });
     },
@@ -67,7 +75,7 @@ export default function useForm<T>(config: UseFormConfig<T>, options?: UseFormOp
     setErrors({} as UseFormErrors<T>);
     const newData: T = replace ? { ...(d as T) } : { ...(data || ({} as T)), ...d };
     setData(newData);
-    inputRefs.current = updateFormInputs(formRef.current, newData as Record<keyof T, UseFormValue>) as Record<
+    inputRefs.current = updateValuesForFormInputs(formRef.current, newData as Record<keyof T, UseFormValue>) as Record<
       keyof T,
       HTMLInputElement[]
     >;
@@ -76,21 +84,32 @@ export default function useForm<T>(config: UseFormConfig<T>, options?: UseFormOp
   const submit = useCallback((): { valid: boolean; errors: UseFormErrors<T> } => {
     setSubmitted(true);
     return validate();
-  }, [validate]);
+  }, [validate, setSubmitted]);
 
+  // SET DATA, RESET DATA
   const i = JSON.stringify(extractData(config));
   useEffect(() => {
     const d = JSON.parse(i) || {};
     setData(d);
-    inputRefs.current = updateFormInputs(formRef.current, d) as Record<keyof T, HTMLInputElement[]>;
+    inputRefs.current = updateValuesForFormInputs(formRef.current, d) as Record<keyof T, HTMLInputElement[]>;
 
     function handleReset(e: Event) {
       e.preventDefault();
       formRef.current?.classList.remove('uf-submitted');
+      formRef.current?.classList.remove('uf-invalid');
       formRef.current?.classList.remove('uf-touched');
-      //validate(d);
-      //setData(d);
-      //inputRefs.current = updateFormInputs(formRef.current, d) as Record<keyof T, HTMLInputElement[]>;
+      formRef.current?.classList.remove('uf-changed');
+      setSubmitted(false);
+      setData(d);
+      setErrors({} as UseFormErrors<T>);
+      inputRefs.current = updateValuesForFormInputs(formRef.current, d) as Record<keyof T, HTMLInputElement[]>;
+      Object.values<HTMLInputElement[]>(inputRefs.current).forEach((els) => {
+        els.forEach((el) => {
+          el.classList.remove('uf-invalid');
+          el.classList.remove('uf-touched');
+          el.classList.remove('uf-changed');
+        });
+      });
     }
 
     const rc = formRef.current;
@@ -102,19 +121,15 @@ export default function useForm<T>(config: UseFormConfig<T>, options?: UseFormOp
         rc.removeEventListener('reset', handleReset);
       }
     };
-  }, [i, setData]);
+  }, [i, setData, setErrors, setSubmitted]);
 
+  // ELEMENT CHANGE
   useEffect(() => {
-    if (options?.validateOn === 'submit' || !formRef.current) {
+    if (!formRef.current) {
       return;
     }
 
-    const eventNames = {
-      blur: 'change',
-      change: 'input',
-    };
-
-    const eventName = eventNames[options?.validateOn || 'change'] || 'change';
+    const eventName = options?.validateOn === 'change' ? 'input' : 'change';
 
     const rc = formRef.current;
     getFormInputs(rc).forEach((el) => el.addEventListener(eventName, change));
@@ -126,6 +141,7 @@ export default function useForm<T>(config: UseFormConfig<T>, options?: UseFormOp
     };
   }, [options, change]);
 
+  // ELEMENT FOCUS
   useEffect(() => {
     const rc = formRef.current;
 
@@ -143,6 +159,7 @@ export default function useForm<T>(config: UseFormConfig<T>, options?: UseFormOp
     };
   });
 
+  //SUBMIT
   useEffect(() => {
     function handleSubmit() {
       formRef.current?.classList.add('uf-submitted');

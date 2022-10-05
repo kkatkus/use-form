@@ -1,5 +1,9 @@
 import { UseFormValue } from './types';
 
+export function getNumeric(val: UseFormValue): number {
+  return parseInt(String(val).trim(), 10);
+}
+
 export function isUndefinedOrNull(val: UseFormValue): boolean {
   return val === null || val === undefined;
 }
@@ -22,7 +26,13 @@ export function min(minVal: number, message = `Min ${minVal}`): (val: UseFormVal
     if (isUndefinedOrNull(val) || isEmpty(val)) {
       return null;
     }
-    if (parseInt(String(val).trim(), 10) < minVal) {
+
+    const vNumeric = numeric()(val);
+    if (vNumeric) {
+      return vNumeric;
+    }
+
+    if (getNumeric(val) < minVal) {
       return message;
     }
     return null;
@@ -34,7 +44,13 @@ export function max(maxVal: number, message = `Max ${maxVal}`): (val: UseFormVal
     if (isUndefinedOrNull(val) || isEmpty(val)) {
       return null;
     }
-    if (parseInt(String(val).trim(), 10) > maxVal) {
+
+    const vNumeric = numeric()(val);
+    if (vNumeric) {
+      return vNumeric;
+    }
+
+    if (getNumeric(val) > maxVal) {
       return message;
     }
     return null;
@@ -52,7 +68,7 @@ export function required(message = 'Value is required'): (val: UseFormValue) => 
 
 export function requiredTrue(message = 'Value must be true'): (val: UseFormValue) => string | null {
   return (val: UseFormValue): string | null => {
-    if (isUndefinedOrNull(val) || val === '' || isEmpty(val) || Boolean(val) !== true) {
+    if (String(val) !== 'true') {
       return message;
     }
     return null;
@@ -138,22 +154,15 @@ export function numeric(message = 'Value must be numeric'): (val: UseFormValue) 
     if (isUndefinedOrNull(val) || isEmpty(val)) {
       return null;
     }
-    const p = /^[0-9]+$/;
-    return String(val).match(p) ? null : message;
+    return String(val).match(/^\-{0,1}[0-9]+$/) ? null : message;
   };
 }
 
 export function decimal(message = 'Value must be decimal'): (val: UseFormValue) => string | null {
   return (val: UseFormValue) => {
-    console.log('dec', val);
-
     if (isUndefinedOrNull(val) || isEmpty(val)) {
       return null;
     }
-    if (isNaN(parseFloat(String(val)))) {
-      console.log('baba', val, message);
-      return message;
-    }
-    return null;
+    return String(val).match(/^\d*\.?\d*$/) ? null : message;
   };
 }
