@@ -2,6 +2,7 @@
 .vscode/
 node_modules/
 build/
+storybook-static/
 .DS_Store
 *.tgz
 npm-debug.log*
