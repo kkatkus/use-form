@@ -29,10 +29,10 @@ npm install @kkatkus/use-form --save
 ```
 
 <br />
-<h1>Examples</h1>
+<h1>How to use it</h1>
 
 ```ts
-useForm<T>(config: UseFormConfig<T>, initialData: T, options?: UseFormOptions): UseForm<T>
+useForm<T>(config: UseFormConfig<T>, options?: UseFormOptions): UseForm<T>
 ```
 
  Example:
@@ -48,14 +48,16 @@ interface ExampleForm extends Record<string, UseFormValue> {
 ```jsx
 function Example(): ReactElement {
   
-  const ageValidator = (val: UseFormValue): string | undefined => {
+  const ageValidator = (val: UseFormValue): string | null => {
     if (val === "") {
-      return;
+      return null;
     }
 
     if (Number(val) < 18) {
       return " Not 18";
     }
+
+    return null;
   };
 
   const form = useForm<ExampleForm>(
@@ -94,14 +96,14 @@ function Example(): ReactElement {
 
 <h2>Validators</h2>
 
-| Validator  | Center Aligned  |
-| :------------ |:---------------|
-| ```min(minVal: number, message: string): string \| undefined``` | Validator that requires the control's value to be greater than or equal to the provided number.     |
-| ```max(maxVal: number, message: string): string \| undefined```                | Validator that requires the control's value to be less than or equal to the provided number.        |
-| ```required(message: string): string \| undefined```                           | Validator that requires the control have a non-empty value.        |
-| ```requiredTrue(message: string): string \| undefined```                       | Validator that requires the control's value be true. This validator is commonly used for required checkboxes.        |
-| ```equal(withName: string, message: string): string \| undefined```            | Validator that requires the control's value to be equal with other control's value. This validator is commonly used to compare passwords        |
-| ```email(message: string): string \| undefined```                              | Validator that requires the control's value pass an email validation test.        |
-| ```minLength(minLengh: number, message: string): string \| undefined```        | Validator that requires the length of the control's value to be greater than or equal to the provided minimum length.        |
-| ```maxLength(maxLength: number, message: string): string \| undefined```       | Validator that requires the length of the control's value to be less than or equal to the provided maximum length.        |
-| ```pattern(pattern: string \| RegExp, message: string): string \| undefined```  | Validator that requires the control's value to match a regex pattern.        |
+- ```min(minVal: number, message: string): string | null``` - Validator that requires the control's value to be greater than or equal to the provided number.
+- ```max(maxVal: number, message: string): string | null``` - Validator that requires the control's value to be less than or equal to the provided number.
+- ```required(message: string): string | null``` - Validator that requires the control have a non-empty value.
+- ```requiredTrue(message: string): string | null``` - Validator that requires the control's value be true. This validator is commonly used for required checkboxes.
+- ```equal(withName: string, message: string): string | null``` - Validator that requires the control's value to be equal with other control's value. This validator is commonly used to compare passwords.
+- ```email(message: string): string | null``` - Validator that requires the control's value pass an email validation test.
+- ```minLength(minLengh: number, message: string): string | null``` - Validator that requires the length of the control's value to be greater than or equal to the provided minimum length.
+- ```maxLength(maxLength: number, message: string): string | null``` - Validator that requires the length of the control's value to be less than or equal to the provided maximum length.
+- ```pattern(pattern: string | RegExp, message: string): string | null``` - Validator that requires the control's value to match a regex pattern.
+- ```numeric(message: string): string | null``` - Validator that requires the control's value pass numeric validation test.
+- ```decimal(message: string): string | null``` - Validator that requires the control's value pass decimal validation test.
