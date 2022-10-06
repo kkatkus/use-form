@@ -1,22 +1,19 @@
 <div align="center">
 <h1>useForm</h1>
 
-<a href="https://www.emojione.com/emoji/1f410">
   <img
-    height="80"
-    width="80"
-    alt="goat"
-    src="https://raw.githubusercontent.com/testing-library/react-testing-library/main/other/goat.png"
+    height="333"
+    width="333"
+    alt="simple things"
+    src="./src/assets/img/simple-things.jpg"
   />
-</a>
 
-<p>Do simple things in a simplest way.</p>
-
-<br /><br /><br />
+<br />
 
 </div>
 
-<h1>Getting Started</h1>
+<h1>React useForm custom hook | <a target="_blank" href="https://use-form.vercel.app/">storybook</a></h1>
+
 <br />
 
 To get it started, add `use-form` to your project:
@@ -63,23 +60,20 @@ function Example(): ReactElement {
 
   const form = useForm<ExampleForm>(
     {
-      email: [required('Email is required'), email()],
+      email: ['test@test.com', required('Email is required'), email()],
       password: [required('Password is required'), minLength(8)],
       repeatPassword: [required('Repeat password is required'), equal<ExampleForm>('password', 'Passwords must match')],
       age: [required('Age is required'), ageValidator],
-    },
-    {
-      email: 'test@test.com',
     },
     {
       validateOn: 'change',
     }
   );
 
-  const handleSubmit = async (e: MouseEvent | FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const { isValid } = form.submit();
-    if (!isValid) {
+    const { valid, errors } = form.submit();
+    if (!valid) {
       return;
     }
 
@@ -88,7 +82,7 @@ function Example(): ReactElement {
   };
 
   return (
-    <form ref={ref.current} onSubmit={handleSubmit} method="post">
+    <form ref={form.ref} onSubmit={handleSubmit} method="post">
       <Input type="text" placeholder="Email address" name="email" />
       <Input type="password" placeholder="Password" name="password" />
       <Input type="password" placeholder="Repeat password" name="repeatPassword" />
