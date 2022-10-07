@@ -77,17 +77,15 @@ export function requiredTrue(message = 'Value must be true'): (val: UseFormValue
 
 export function equal<T>(
   withName: string,
-  message = 'Values must be equal.',
+  message = 'Values must be equal',
 ): (val: UseFormValue, data: T) => string | null {
   return (val: UseFormValue, data: T): string | null => {
-    if (
-      val !== data[withName as keyof T] &&
-      (!(isUndefinedOrNull(val) || isEmpty(val)) ||
-        !(
-          isUndefinedOrNull(data[withName as keyof T] as UseFormValue) ||
-          isEmpty(data[withName as keyof T] as UseFormValue)
-        ))
-    ) {
+    const valIsUndefinedOrNull = isUndefinedOrNull(val) || isEmpty(val);
+    const withValIsUndefinedOrNull =
+      !data ||
+      isUndefinedOrNull(data[withName as keyof T] as UseFormValue) ||
+      isEmpty(data[withName as keyof T] as UseFormValue);
+    if (data && val !== data[withName as keyof T] && !valIsUndefinedOrNull && !withValIsUndefinedOrNull) {
       return message;
     }
     return null;
