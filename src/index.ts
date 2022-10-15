@@ -14,4 +14,4 @@ export {
   numeric,
   decimal,
 } from './validators';
-export { useForm } from './useForm';
+export { useForm, UseForm } from './useForm';
