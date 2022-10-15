@@ -1,4 +1,4 @@
-export { UseFormValue, UseFormConfig, UseFormErrors, UseFormOptions } from './types';
+export { UseFormValue, UseFormConfig, UseFormConfigValidatorFn, UseFormErrors, UseFormOptions, UseForm } from './types';
 export {
   isUndefinedOrNull,
   isEmpty,
@@ -14,4 +14,4 @@ export {
   numeric,
   decimal,
 } from './validators';
-export { useForm, UseForm } from './useForm';
+export { useForm } from './useForm';

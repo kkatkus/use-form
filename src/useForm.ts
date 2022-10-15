@@ -1,18 +1,6 @@
-import { useState, useRef, useEffect, useCallback, ForwardedRef } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { extractData, getFormInputs, updateValuesForFormInputs, validateFn } from './helpers';
-import { UseFormConfig, UseFormErrors, UseFormOptions, UseFormValue } from './types';
-
-export interface UseForm<T> {
-  ref: ForwardedRef<HTMLFormElement>;
-  submitted: boolean;
-  valid: boolean;
-  data: T;
-  errors: UseFormErrors<T>;
-  change: (e: Event) => void | Error;
-  set: (data: Partial<T>, replace?: boolean) => void;
-  validate: () => { valid: boolean; errors: UseFormErrors<T> };
-  submit: () => { valid: boolean; errors: UseFormErrors<T> };
-}
+import { UseForm, UseFormConfig, UseFormErrors, UseFormOptions, UseFormValue } from './types';
 
 export function useForm<T>(config: UseFormConfig<T>, options?: UseFormOptions): UseForm<T> {
   const formRef = useRef<HTMLFormElement>(null);
