@@ -3,7 +3,7 @@ import { extractData, getFormInputs, updateValuesForFormInputs, validateFn } fro
 import { UseForm, UseFormConfig, UseFormErrors, UseFormOptions, UseFormValue } from './types';
 
 export function useForm<T>(config: UseFormConfig<T>, options?: UseFormOptions): UseForm<T> {
-  const formRef = useRef<HTMLFormElement>(null);
+  const ref = useRef<HTMLFormElement>(null);
   const inputRefs = useRef<Record<keyof T, HTMLInputElement[]>>({} as Record<keyof T, HTMLInputElement[]>);
 
   const [submitted, setSubmitted] = useState(false);
@@ -14,7 +14,7 @@ export function useForm<T>(config: UseFormConfig<T>, options?: UseFormOptions): 
     (d?: T): { valid: boolean; errors: UseFormErrors<T> } => {
       const { valid, errors } = validateFn<T>(config, d || data || ({} as T));
       setErrors(errors);
-      formRef.current?.classList[valid ? 'remove' : 'add']('uf-invalid');
+      ref.current?.classList[valid ? 'remove' : 'add']('uf-invalid');
       Object.entries<HTMLInputElement[]>(inputRefs.current).forEach(([prop, els]) => {
         els.forEach((el) => {
           el.classList[errors[prop as keyof T] ? 'add' : 'remove']('uf-invalid');
@@ -42,7 +42,7 @@ export function useForm<T>(config: UseFormConfig<T>, options?: UseFormOptions): 
 
       if (instantUpdate) {
         classList.add('uf-changed');
-        formRef.current?.classList.add('uf-changed');
+        ref.current?.classList.add('uf-changed');
       }
 
       let newData: T;
@@ -63,7 +63,7 @@ export function useForm<T>(config: UseFormConfig<T>, options?: UseFormOptions): 
     setErrors({} as UseFormErrors<T>);
     const newData: T = replace ? { ...(d as T) } : { ...(data || ({} as T)), ...d };
     setData(newData);
-    inputRefs.current = updateValuesForFormInputs(formRef.current, newData as Record<keyof T, UseFormValue>) as Record<
+    inputRefs.current = updateValuesForFormInputs(ref.current, newData as Record<keyof T, UseFormValue>) as Record<
       keyof T,
       HTMLInputElement[]
     >;
@@ -79,18 +79,18 @@ export function useForm<T>(config: UseFormConfig<T>, options?: UseFormOptions): 
   useEffect(() => {
     const d = JSON.parse(i) || {};
     setData(d);
-    inputRefs.current = updateValuesForFormInputs(formRef.current, d) as Record<keyof T, HTMLInputElement[]>;
+    inputRefs.current = updateValuesForFormInputs(ref.current, d) as Record<keyof T, HTMLInputElement[]>;
 
     function handleReset(e: Event) {
       e.preventDefault();
-      formRef.current?.classList.remove('uf-submitted');
-      formRef.current?.classList.remove('uf-invalid');
-      formRef.current?.classList.remove('uf-touched');
-      formRef.current?.classList.remove('uf-changed');
+      ref.current?.classList.remove('uf-submitted');
+      ref.current?.classList.remove('uf-invalid');
+      ref.current?.classList.remove('uf-touched');
+      ref.current?.classList.remove('uf-changed');
       setSubmitted(false);
       setData(d);
       setErrors({} as UseFormErrors<T>);
-      inputRefs.current = updateValuesForFormInputs(formRef.current, d) as Record<keyof T, HTMLInputElement[]>;
+      inputRefs.current = updateValuesForFormInputs(ref.current, d) as Record<keyof T, HTMLInputElement[]>;
       Object.values<HTMLInputElement[]>(inputRefs.current).forEach((els) => {
         els.forEach((el) => {
           el.classList.remove('uf-invalid');
@@ -100,7 +100,7 @@ export function useForm<T>(config: UseFormConfig<T>, options?: UseFormOptions): 
       });
     }
 
-    const rc = formRef.current;
+    const rc = ref.current;
     if (rc) {
       rc.addEventListener('reset', handleReset);
     }
@@ -113,13 +113,13 @@ export function useForm<T>(config: UseFormConfig<T>, options?: UseFormOptions): 
 
   // ELEMENT CHANGE
   useEffect(() => {
-    if (!formRef.current) {
+    if (!ref.current) {
       return;
     }
 
     const eventName = options?.validateOn === 'change' ? 'input' : 'change';
 
-    const rc = formRef.current;
+    const rc = ref.current;
     getFormInputs(rc).forEach((el) => el.addEventListener(eventName, change));
 
     return () => {
@@ -131,10 +131,10 @@ export function useForm<T>(config: UseFormConfig<T>, options?: UseFormOptions): 
 
   // ELEMENT FOCUS
   useEffect(() => {
-    const rc = formRef.current;
+    const rc = ref.current;
 
     function focus(e: FocusEvent) {
-      formRef.current?.classList.add('uf-touched');
+      ref.current?.classList.add('uf-touched');
       (e?.target as any).classList.add('uf-touched');
     }
 
@@ -150,11 +150,11 @@ export function useForm<T>(config: UseFormConfig<T>, options?: UseFormOptions): 
   //SUBMIT
   useEffect(() => {
     function handleSubmit() {
-      formRef.current?.classList.add('uf-submitted');
+      ref.current?.classList.add('uf-submitted');
       submit();
     }
 
-    const rc = formRef.current;
+    const rc = ref.current;
     if (rc) {
       rc.addEventListener('submit', handleSubmit);
     }
@@ -166,7 +166,7 @@ export function useForm<T>(config: UseFormConfig<T>, options?: UseFormOptions): 
   }, [submit]);
 
   return {
-    ref: formRef,
+    ref,
     submitted,
     valid: !Object.keys(errors).length,
     data,
