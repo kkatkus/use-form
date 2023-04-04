@@ -58,7 +58,7 @@ export function updateValuesForFormInputs(
       case 'image':
         break;
       default:
-        els[0].value = String(data[prop]);
+        els[0].value = data[prop] !== null && data[prop] !== undefined ? String(data[prop]) : '';
         break;
     }
   });
