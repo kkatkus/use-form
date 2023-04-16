@@ -4,8 +4,9 @@ import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import typescript from '@rollup/plugin-typescript';
 import dts from 'rollup-plugin-dts';
-import { terser } from 'rollup-plugin-terser';
 import external from 'rollup-plugin-peer-deps-external';
+
+import { terser } from 'rollup-plugin-terser';
 
 export default [
   {
@@ -18,7 +19,7 @@ export default [
         name: 'use-form',
       },
       {
-        file: "dist/esm/index.mjs",
+        file: "dist/esm/index.js",
         format: 'esm',
         sourcemap: true,
       },
@@ -29,7 +30,7 @@ export default [
       resolve(),
       commonjs(),
       json(),
-      typescript({ tsconfig: './tsconfig.json', sourceMap: true, exclude: ['src'] }),
+      typescript({ tsconfig: './tsconfig.json' }),
       terser(),
     ],
   },

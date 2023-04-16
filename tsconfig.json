@@ -2,7 +2,7 @@
   "compilerOptions": {
     // Default
     "rootDir": "src",
-    "target": "esnext", 
+    "target": "es5", 
     "esModuleInterop": true, 
     "forceConsistentCasingInFileNames": true,
     "strict": true, 

@@ -8,6 +8,8 @@
     "form",
     "validation"
   ],
+  "author": "Kęstutis Katkus",
+  "license": "MIT",
   "private": false,
   "scripts": {
     "test": "jest",
@@ -17,8 +19,12 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
-  "author": "Kęstutis Katkus",
-  "license": "MIT",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "files": [
+    "dist"
+  ],
+  "types": "dist/index.d.ts",
   "devDependencies": {
     "@babel/core": "^7.21.4",
     "@rollup/plugin-commonjs": "^24.1.0",
@@ -62,13 +68,6 @@
     "type": "git",
     "url": "git+https://github.com/kkatkus/use-form.git"
   },
-  "main": "dist/cjs/index.js",
-  "module": "dist/es/index.mjs",
-  "files": [
-    "dist"
-  ],
-  "type": "module",
-  "types": "dist/index.d.ts",
   "bugs": {
     "url": "https://github.com/kkatkus/use-form/issues"
   },
