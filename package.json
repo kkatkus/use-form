@@ -1,6 +1,6 @@
 {
   "name": "@kkatkus/use-form",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Form validation custom react hook",
   "keywords": [
     "react",
