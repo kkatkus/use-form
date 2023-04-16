@@ -1,3 +1,4 @@
+
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
@@ -6,20 +7,18 @@ import dts from 'rollup-plugin-dts';
 import { terser } from 'rollup-plugin-terser';
 import external from 'rollup-plugin-peer-deps-external';
 
-const pkg = require('./package.json');
-
 export default [
   {
     input: 'src/index.ts',
     output: [
       {
-        file: pkg.main,
+        file: "dist/cjs/index.js",
         format: 'cjs',
         sourcemap: true,
         name: 'use-form',
       },
       {
-        file: pkg.module,
+        file: "dist/esm/index.mjs",
         format: 'esm',
         sourcemap: true,
       },
@@ -30,13 +29,13 @@ export default [
       resolve(),
       commonjs(),
       json(),
-      typescript({ tsconfig: './tsconfig.json', sourceMap: false, exclude: ['src'] }),
+      typescript({ tsconfig: './tsconfig.json', sourceMap: true, exclude: ['src'] }),
       terser(),
     ],
   },
   {
-    input: 'dist/esm/index.d.ts',
+    input: 'dist/esm/types/index.d.ts',
     output: [{ file: 'dist/index.d.ts', format: 'esm' }],
     plugins: [dts()],
-  },
+  }
 ];
