@@ -172,6 +172,14 @@ export function useForm<T>(config: UseFormConfig<T>, options?: UseFormOptions): 
     };
   }, [submit]);
 
+  // VALIDATE ON LOAD
+  useEffect(() => {
+    if (options?.validateOnLoad === false) {
+      return;
+    }
+    validate();
+  }, [validate, options]);
+
   return {
     ref,
     submitted,
