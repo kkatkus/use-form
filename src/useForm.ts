@@ -93,6 +93,7 @@ export function useForm<T>(config: UseFormConfig<T>, options?: UseFormOptions): 
       inputRefs.current = updateValuesForFormInputs(ref.current, d) as Record<keyof T, HTMLInputElement[]>;
       Object.values<HTMLInputElement[]>(inputRefs.current).forEach((els) => {
         els.forEach((el) => {
+          el.classList.remove('uf-submitted');
           el.classList.remove('uf-invalid');
           el.classList.remove('uf-touched');
           el.classList.remove('uf-changed');
@@ -151,6 +152,12 @@ export function useForm<T>(config: UseFormConfig<T>, options?: UseFormOptions): 
   useEffect(() => {
     function handleSubmit() {
       ref.current?.classList.add('uf-submitted');
+      Object.values<HTMLInputElement[]>(inputRefs.current).forEach((els) => {
+        els.forEach((el) => {
+          el.classList.add('uf-submitted');
+        });
+      });
+
       submit();
     }
 
