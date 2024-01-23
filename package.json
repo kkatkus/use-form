@@ -73,5 +73,7 @@
     "url": "https://github.com/kkatkus/use-form/issues"
   },
   "homepage": "https://github.com/kkatkus/use-form#readme",
-  "dependencies": {}
+  "dependencies": {
+    "or": "^0.2.0"
+  }
 }
