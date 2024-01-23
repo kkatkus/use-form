@@ -12,7 +12,6 @@ export type UseFormErrors<T> = Record<Partial<keyof T>, string>;
 
 export interface UseFormOptions {
   validateOn?: 'change' | 'blur' | 'submit';
-  validateOnLoad?: boolean;
 }
 
 export interface UseForm<T> {

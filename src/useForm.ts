@@ -172,14 +172,6 @@ export function useForm<T>(config: UseFormConfig<T>, options?: UseFormOptions): 
     };
   }, [submit]);
 
-  // VALIDATE ON LOAD
-  useEffect(() => {
-    if (options?.validateOnLoad === false) {
-      return;
-    }
-    validate();
-  }, [validate, options?.validateOnLoad]);
-
   return {
     ref,
     submitted,
