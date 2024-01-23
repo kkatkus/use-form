@@ -128,7 +128,7 @@ export function useForm<T>(config: UseFormConfig<T>, options?: UseFormOptions): 
         getFormInputs(rc).forEach((el) => el.removeEventListener(eventName, change));
       }
     };
-  }, [options, change]);
+  }, [options?.validateOn, change]);
 
   // ELEMENT FOCUS
   useEffect(() => {
@@ -178,7 +178,7 @@ export function useForm<T>(config: UseFormConfig<T>, options?: UseFormOptions): 
       return;
     }
     validate();
-  }, [validate, options]);
+  }, [validate, options?.validateOnLoad]);
 
   return {
     ref,
